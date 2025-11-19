@@ -1,16 +1,36 @@
-﻿using Application.Common;
+﻿//using Application.Common;
+//using Application.DTOs;
+//using Application.Interfaces;
+//using AutoMapper;
+//using Domain.Entities;
+//using Domain.Enums;
+//using Domain.Interfaces;
+//using FluentValidation;
+//using System;
+//using System.Collections.Generic;
+//using System.ComponentModel.DataAnnotations;
+//using System.Linq;
+//using System.Linq.Expressions;
+//using System.Text;
+//using System.Threading.Tasks;
+//using FluentValidation.Results;
+using Application.Common;
 using Application.DTOs;
 using Application.Interfaces;
+using Application.ValidationRules;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+using FluentValidation;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Application.Services
 {
@@ -19,18 +39,34 @@ namespace Application.Services
         IUnitOfWork _unitOfWork;
         IMapper _mapper;
         IAuditLogService _auditLogService;
+        IValidator<PromptDTO> _validator;
 
-        public PromptService(IUnitOfWork unitOfWork, IMapper mapper, IAuditLogService auditLogService)
+        IValidator<IEnumerable<PromptDTO>> _listValidator;
+
+        public PromptService(IUnitOfWork unitOfWork, IMapper mapper, IAuditLogService auditLogService, IValidator<PromptDTO> validator, IValidator<IEnumerable<PromptDTO>> listValidator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _auditLogService = auditLogService;
+            _validator = validator;
+            _listValidator = listValidator;
         }
+
+        
+
 
         public async Task<Result<PromptDTO>> AddAsync(PromptDTO entity)
         {
             try
             {
+                ValidationResult result= _validator.Validate(entity);
+                if (!result.IsValid)
+                {
+                   string ErrorsMessages= string.Join(',',result.Errors.Select(x => x.ErrorMessage));
+
+                    throw new ApplicationException($" Validation Hatası {ErrorsMessages}");
+                }
+
                 Prompt Prompt = _mapper.Map<Prompt>(entity);
 
                 await _unitOfWork.Prompts.AddAsync(Prompt);
@@ -52,6 +88,29 @@ namespace Application.Services
         {
             try
             {
+
+                 //1.yontem  
+                foreach (var entity in entities)
+                {
+                    ValidationResult result = _validator.Validate(entity);
+                    if (!result.IsValid)
+                    {
+                        string ErrorsMessages = string.Join(',', result.Errors.Select(x => x.ErrorMessage));
+
+                        throw new ApplicationException($" Validation Hatası {ErrorsMessages}");
+                    }
+
+                }
+                //2.yontem 
+
+                ValidationResult result1 = await _listValidator.ValidateAsync(entities);
+                if (!result1.IsValid)
+                {
+                    string ErrorsMessages = string.Join(',', result1.Errors.Select(x => x.ErrorMessage));
+
+                    throw new ApplicationException($" Validation Hatası {ErrorsMessages}");
+                }
+
                 IEnumerable<Prompt> Prompts = _mapper.Map<IEnumerable<Prompt>>(entities);
 
                 await _unitOfWork.Prompts.AddRangeAsync(Prompts);
@@ -68,6 +127,9 @@ namespace Application.Services
                 return Result<IEnumerable<PromptDTO>>.Fail("Prompt creation failed.");
             }
         }
+
+       
+
 
         public async Task<Result<IEnumerable<PromptDTO>>> FindAsync(Expression<Func<Prompt, bool>> filter, OrderType orderType = OrderType.ASC, params string[] includes)
         {

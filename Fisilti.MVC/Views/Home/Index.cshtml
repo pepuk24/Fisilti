@@ -1,16 +1,30 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Home Page";
 }
 
 
 @{
+    Prompt prompt = new Prompt();
+}
 
-  
-    string isim = "Büşra Kaya";
+@{
+
+
+    string isim = "aptik demir";
+    string pixabay = "http://pixabay.com";
 
 }
 
+
+@* <style>
+    a{background-color:aqua};
+
+</style> *@
+
 <div class="text-center">
-    <h1 class="display-4">Welcome @isim</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4" class="bg-danger">Welcome @isim</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> 
+    <br>
+    <h1 class="bg-info"> <a href="@pixabay"> Pixabaya gider---> </a></h1>
 </div>

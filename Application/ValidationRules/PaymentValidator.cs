@@ -12,27 +12,24 @@ namespace Application.ValidationRules
 {
     internal class PaymentValidator :AbstractValidator<Payment>
     {
-        IUnitOfWork _unitOfWork;
+        IUnitOfWork unitOfWork;
         public PaymentValidator(IUnitOfWork unitOfWork)
         {
             
 
             RuleFor(x => x.Amount).GreaterThan(0)
                 .WithMessage("miktar 0 dan buyuk olmali");
-                
+
             RuleFor(x => x.TransactionId)
                 .NotEmpty().WithMessage("transactionid boş olamaz")
-                .MustAsync(TransactionIdIsUnique).
+                .MustAsync(TransactionIdIsUnique).WithMessage("işlem numarası daha once kayıtlı");
                 
 
-            RuleFor(x => x.Price)
-                .GreaterThanOrEqualTo(0).WithMessage("fiyat negatif olamaz");
-            RuleFor(x => x.Description)
-                .NotEmpty().WithMessage("açıklama boş olamaz");
-            this._unitOfWork= unitOfWork;
+           
+            this.unitOfWork= unitOfWork;
         }
 
-        async Task<bool> TransactionIdIsUnique(string transactionId)
+        async Task<bool> TransactionIdIsUnique(string transactionId,CancellationToken cancellation)
         {
             IEnumerable<Payment> result =await UnitOfWork.Payments.FindAsync(x=>x.TransactionId == transactionId);
             if (result.Count() > 0)

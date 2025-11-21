@@ -1,7 +1,29 @@
+﻿using Domain.Entities;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddIdentity<AppUser, AppRole>(opt =>
+{
+    //sifre validationlar
+
+    //opt.Password.RequireDigit= true;
+    opt.Password.RequireNonAlphanumeric = false;
+    //eposta dogrulama zorunda olsun
+    opt.SignIn.RequireConfirmedEmail = true;
+
+    //lockout ayarları
+    opt.Lockout.MaxFailedAccessAttempts = 3;
+    opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); //15 dk kilitli kalsın hesap
+    opt.Lockout.AllowedForNewUsers = true;
+
+})
+    .AddEntityFrameworkStores<FisiltiDbContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 

@@ -12,9 +12,15 @@ namespace Application.ValidationRules
     {
         public CartValidator()
         {
-            RuleFor(x => x.Quantity).GreaterThan(0).WithMessage("miktar 0 dan buyuk olmalı");
-            RuleFor(x => x.AppUserId).GreaterThan(0).WithMessage("kullanıcıid 0 dan buyuk olmalı");
-            RuleFor(x => x.PromptId).GreaterThan(0).WithMessage("promptid 0 dan buyuk olmalı"); 
+            RuleFor(x => x.Quantity)
+                .GreaterThan(0).WithMessage("Miktar 0'dan büyük olmalıdır.");
+
+            RuleFor(x => x.AppUserId)
+                .GreaterThan(0).WithMessage("KullanıcıId 0'dan büyük olmalıdır.");
+
+            RuleFor(x => x.PromptId)
+                .GreaterThan(0).WithMessage("PromptId 0'dan büyük olmalıdır.");
+
         }
     }
 }

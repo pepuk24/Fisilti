@@ -1,27 +1,41 @@
-ï»¿using Domain.Entities;
+using Application.Mappings;
+using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<FisiltiDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("FisiltiDB"));
+});
+
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<AutoMapperProfile>();
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddIdentity<AppUser, AppRole>(opt =>
-{
-    //sifre validationlar
 
-    //opt.Password.RequireDigit= true;
-    opt.Password.RequireNonAlphanumeric = false;
-    //eposta dogrulama zorunda olsun
-    opt.SignIn.RequireConfirmedEmail = true;
+builder.Services
+    .AddIdentity<AppUser, AppRole>(opt =>
+    {
+        //Þifre Kurallarý
+        opt.Password.RequireNonAlphanumeric = false;
+        //opt.Password.RequireUppercase = false;
 
-    //lockout ayarlarÄ±
-    opt.Lockout.MaxFailedAccessAttempts = 3;
-    opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); //15 dk kilitli kalsÄ±n hesap
-    opt.Lockout.AllowedForNewUsers = true;
 
-})
+        //E-Posta doðrulama zorunlu olsun
+        opt.SignIn.RequireConfirmedEmail = true;
+
+        //Lockout Ayarlarý
+        opt.Lockout.MaxFailedAccessAttempts = 5; // Hatalý giriþ sayýsý
+        opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); //Kilit Süresi
+        opt.Lockout.AllowedForNewUsers = true;
+
+    })
     .AddEntityFrameworkStores<FisiltiDbContext>()
     .AddDefaultTokenProviders();
 

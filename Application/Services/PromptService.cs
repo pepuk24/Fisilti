@@ -1,20 +1,4 @@
-﻿//using Application.Common;
-//using Application.DTOs;
-//using Application.Interfaces;
-//using AutoMapper;
-//using Domain.Entities;
-//using Domain.Enums;
-//using Domain.Interfaces;
-//using FluentValidation;
-//using System;
-//using System.Collections.Generic;
-//using System.ComponentModel.DataAnnotations;
-//using System.Linq;
-//using System.Linq.Expressions;
-//using System.Text;
-//using System.Threading.Tasks;
-//using FluentValidation.Results;
-using Application.Common;
+﻿using Application.Common;
 using Application.DTOs;
 using Application.Interfaces;
 using Application.ValidationRules;
@@ -30,7 +14,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-
 
 namespace Application.Services
 {
@@ -52,19 +35,19 @@ namespace Application.Services
             _listValidator = listValidator;
         }
 
-        
-
-
         public async Task<Result<PromptDTO>> AddAsync(PromptDTO entity)
         {
             try
             {
-                ValidationResult result= _validator.Validate(entity);
+                ValidationResult result = await _validator.ValidateAsync(entity);
+
                 if (!result.IsValid)
                 {
-                   string ErrorsMessages= string.Join(',',result.Errors.Select(x => x.ErrorMessage));
+                    // Eğer Valisayon Kurallarına Uymuyorsa Hata Mesajlarını aralarına virgül koyarak birleştirip tek bir string oluşturup geriye ApplicationException hatası fırlatıyoruz.
 
-                    throw new ApplicationException($" Validation Hatası {ErrorsMessages}");
+                    string errorMessages = string.Join(',',result.Errors.Select(x => x.ErrorMessage));
+
+                    throw new ApplicationException($"Validasyon Hatası: {errorMessages}");
                 }
 
                 Prompt Prompt = _mapper.Map<Prompt>(entity);
@@ -88,28 +71,35 @@ namespace Application.Services
         {
             try
             {
-
-                 //1.yontem  
+                //1.Yöntem
                 foreach (var entity in entities)
                 {
-                    ValidationResult result = _validator.Validate(entity);
+                    ValidationResult result = await _validator.ValidateAsync(entity);
+
                     if (!result.IsValid)
                     {
-                        string ErrorsMessages = string.Join(',', result.Errors.Select(x => x.ErrorMessage));
+                        // Eğer Valisayon Kurallarına Uymuyorsa Hata Mesajlarını aralarına virgül koyarak birleştirip tek bir string oluşturup geriye ApplicationException hatası fırlatıyoruz.
 
-                        throw new ApplicationException($" Validation Hatası {ErrorsMessages}");
+                        string errorMessages = string.Join(',', result.Errors.Select(x => x.ErrorMessage));
+
+                        throw new ApplicationException($"Validasyon Hatası: {errorMessages}");
                     }
-
                 }
-                //2.yontem 
 
-                ValidationResult result1 = await _listValidator.ValidateAsync(entities);
-                if (!result1.IsValid)
+
+                //2.Yöntem
+                ValidationResult results = await _listValidator.ValidateAsync(entities);
+
+                if (!results.IsValid)
                 {
-                    string ErrorsMessages = string.Join(',', result1.Errors.Select(x => x.ErrorMessage));
+                    // Eğer Valisayon Kurallarına Uymuyorsa Hata Mesajlarını aralarına virgül koyarak birleştirip tek bir string oluşturup geriye ApplicationException hatası fırlatıyoruz.
 
-                    throw new ApplicationException($" Validation Hatası {ErrorsMessages}");
+                    string errorMessages = string.Join(',', results.Errors.Select(x => x.ErrorMessage));
+
+                    throw new ApplicationException($"Validasyon Hatası: {errorMessages}");
                 }
+
+
 
                 IEnumerable<Prompt> Prompts = _mapper.Map<IEnumerable<Prompt>>(entities);
 
@@ -127,9 +117,6 @@ namespace Application.Services
                 return Result<IEnumerable<PromptDTO>>.Fail("Prompt creation failed.");
             }
         }
-
-       
-
 
         public async Task<Result<IEnumerable<PromptDTO>>> FindAsync(Expression<Func<Prompt, bool>> filter, OrderType orderType = OrderType.ASC, params string[] includes)
         {

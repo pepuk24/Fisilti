@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace Application.ValidationRules
 {
-    internal class CategoryValidator :AbstractValidator<Category>
+    internal class CategoryValidator : AbstractValidator<Category>
     {
         public CategoryValidator()
         {
-            RuleFor(x => x.CategoryName).NotEmpty()
-                .WithMessage("categori ismi boş olamaz");
+            RuleFor(x => x.CategoryName)
+               .NotEmpty().WithMessage("Başlık Boş Olamaz");
+               
         }
     }
 }

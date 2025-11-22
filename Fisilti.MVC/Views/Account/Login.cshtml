@@ -1,6 +1,7 @@
-﻿<!--================================
-      START BREADCRUMB AREA
-  =================================-->
+﻿@model LoginViewModel
+<!--================================
+       START BREADCRUMB AREA
+   =================================-->
 <section class="breadcrumb-area">
     <div class="container">
         <div class="row">
@@ -33,7 +34,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-6 offset-lg-3">
-                <form action="#">
+                <form asp-controller="Account" asp-action="Login">
                     <div class="cardify login">
                         <div class="login--header">
                             <h3>Welcome Back</h3>
@@ -43,18 +44,18 @@
 
                         <div class="login--form">
                             <div class="form-group">
-                                <label for="user_name">Username</label>
-                                <input id="user_name" type="text" class="text_field" placeholder="Enter your username...">
+                                <label for="UserName">Username</label>
+                                <input asp-for="UserName" type="text" class="text_field" placeholder="Enter your username...">
                             </div>
 
                             <div class="form-group">
-                                <label for="pass">Password</label>
-                                <input id="pass" type="text" class="text_field" placeholder="Enter your password...">
+                                <label for="Password">Password</label>
+                                <input asp-for="Password" type="password" class="text_field" placeholder="Enter your password...">
                             </div>
 
                             <div class="form-group">
                                 <div class="custom_checkbox">
-                                    <input type="checkbox" id="ch2">
+                                    <input type="checkbox" asp-for="RememberMe" id="ch2">
                                     <label for="ch2">
                                         <span class="shadow_checkbox"></span>
                                         <span class="label_text">Remember me</span>
@@ -72,7 +73,7 @@
                                 </p>
                                 <p class="signup">
                                     Don't have an
-                                    <a href="signup.html">account</a>?
+                                    <a asp-controller="Account" asp-action="Register">account</a>?
                                 </p>
                             </div>
                         </div>

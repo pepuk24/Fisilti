@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 
 namespace Application.ValidationRules
 {
-    internal class PromptListValidator :AbstractValidator<IEnumerable<PromptDTO>>
+    internal class PromptListValidator : AbstractValidator<IEnumerable<PromptDTO>>
     {
         public PromptListValidator()
         {
-            //2.yontem
             RuleForEach(x => x).SetValidator(new PromptDTOValidator());
         }
     }

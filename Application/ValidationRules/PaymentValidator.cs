@@ -27,10 +27,10 @@ namespace Application.ValidationRules
             this.unitOfWork = unitOfWork;
         }
 
-        async Task<bool> TransactionIdIsUnique(string transactionId, CancellationToken cancellationToken)
+        async Task<bool> TransactionIdIsUnique(string transactionId,CancellationToken cancellationToken)
         {
             IEnumerable<Payment> result = await unitOfWork.Payments.FindAsync(x => x.TransactionId == transactionId);
-
+            
             if (result.Count() > 0)
                 return false;
             else

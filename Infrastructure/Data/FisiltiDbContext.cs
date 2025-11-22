@@ -9,11 +9,19 @@ namespace Infrastructure.Data
 {
     public class FisiltiDbContext : IdentityDbContext<AppUser,AppRole,int>
     {
-        
+        public FisiltiDbContext()
+        {
+            
+        }
+        public FisiltiDbContext(DbContextOptions<FisiltiDbContext> options):base(options)
+        {
+            
+        }
+
         //Veri tabanına bağlanıp Konfigürasyon İşlemleri Yapılırken Çalışan Method
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=.;Database=FisiltiDB;Trusted_Connection=True;TrustServerCertificate=true;");
+            //optionsBuilder.UseSqlServer("Server=.;Database=FisiltiDB;Trusted_Connection=True;TrustServerCertificate=true;");
             base.OnConfiguring(optionsBuilder);
         }
 

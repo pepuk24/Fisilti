@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using AutoMapper;
 using Domain.Entities;
+using Fisilti.MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,11 @@ namespace Application.Mappings
                 .ForMember(x => x.UserName, opt => opt.MapFrom(x => x.AppUser.UserName))
                 .ForMember(x => x.FullName, opt => opt.MapFrom(x => x.AppUser.FullName))
                 .ReverseMap();
+
+
+            CreateMap<AppUser, RegisterViewModel>().ReverseMap();
+            CreateMap<AppUser, LoginViewModel>().ReverseMap();
+
 
         }
     }

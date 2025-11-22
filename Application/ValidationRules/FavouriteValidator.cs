@@ -8,14 +8,17 @@ using System.Threading.Tasks;
 
 namespace Application.ValidationRules
 {
-    internal class FavouriteValidator :AbstractValidator<Favourite>
+    internal class FavouriteValidator : AbstractValidator<Favourite>
     {
         public FavouriteValidator()
         {
-            RuleFor(x => x.AppUserId).GreaterThan(0)
-                .WithMessage("kullanıcıid 0 dan buyuk olmalı");
+
+            RuleFor(x => x.AppUserId)
+                .GreaterThan(0).WithMessage("KullanıcıId 0'dan büyük olmalıdır.");
+
             RuleFor(x => x.PromptId)
-                .GreaterThan(0).WithMessage("promptid 0 dan buyuk olmalı");
+                .GreaterThan(0).WithMessage("PromptId 0'dan büyük olmalıdır.");
+
         }
     }
 }

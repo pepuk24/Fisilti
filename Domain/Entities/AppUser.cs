@@ -15,7 +15,6 @@ namespace Domain.Entities
 
         //Navigation Property
         public ICollection<Favourite> Favourites { get; set; }
-        public ICollection<AuditLog> AuditLogs { get; set; }
         public ICollection<Purchase> Purchases { get; set; }
         public ICollection<Subscription> Subscriptions { get; set; }
         public ICollection<Cart> Carts { get; set; }

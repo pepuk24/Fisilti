@@ -12,17 +12,20 @@ namespace Application.ValidationRules
     {
         public PromptValidator()
         {
-            RuleFor(x => x.Title).NotEmpty()
-                .WithMessage("Başlık Boş olamaz").MinimumLength(5).WithMessage("başlık en azından 5 karakter olmalıdır")
-                .MaximumLength(120).WithMessage("baslik en fazla 120 karekter olmalıdır");
+            RuleFor(x => x.Title)
+                .NotEmpty().WithMessage("Başlık Boş Olamaz")
+                .MinimumLength(5).WithMessage("Başlık en az 5 karakter olmalıdır.")
+                .MaximumLength(120).WithMessage("Başlık en fazla 120 karakter olabilir.");
+
             RuleFor(x => x.Content)
-                .NotEmpty().WithMessage("içerik boş olamaz")
-                .MinimumLength(120).WithMessage("en az 20 karekter olmalıdı");
+                .NotEmpty().WithMessage("İçerik Boş Olamaz.")
+                .MinimumLength(20).WithMessage("İçerik en az 20 karakter olmalıdır.");
 
             RuleFor(x => x.Price)
-                .GreaterThanOrEqualTo(0).WithMessage("fiyat negatif olamaz");
+                .GreaterThanOrEqualTo(0).WithMessage("Fiyat negatif olamaz.");
+
             RuleFor(x => x.Description)
-                .NotEmpty().WithMessage("açıklama boş olamaz");
+                .NotEmpty().WithMessage("Açıklama Boş Olamaz.");
 
 
         }

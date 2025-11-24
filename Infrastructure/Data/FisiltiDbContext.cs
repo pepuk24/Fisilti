@@ -11,7 +11,7 @@ namespace Infrastructure.Data
     {
         public FisiltiDbContext()
         {
-            
+
         }
         public FisiltiDbContext(DbContextOptions<FisiltiDbContext> options):base(options)
         {

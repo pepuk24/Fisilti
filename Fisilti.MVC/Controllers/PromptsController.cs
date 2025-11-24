@@ -16,7 +16,7 @@ namespace Fisilti.MVC.Controllers
 
         public PromptsController()
         {
-            _context = new FisiltiDbContext();
+            //_context = new FisiltiDbContext();
         }
 
         // GET: Prompts

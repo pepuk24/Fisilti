@@ -2,8 +2,10 @@
 using AutoMapper;
 using Domain.Entities;
 using Fisilti.MVC.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Fisilti.MVC.Controllers
 {
@@ -16,9 +18,9 @@ namespace Fisilti.MVC.Controllers
 
         public AccountController(UserManager<AppUser> userManager, IMapper mapper, SignInManager<AppUser> signInManager, IConfiguration config)
         {
-            _userManager = userManager;
+            //_userManager = userManager;
             _mapper = mapper;
-            _signInManager = signInManager;
+            //_signInManager = signInManager;
             _config = config;
         }
 
@@ -32,6 +34,22 @@ namespace Fisilti.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            //identity kutuphanesini kullanmadan giriş yapma
+
+            //Claim:içerisinde giriş yapmış olan kullanıcının bilgilerini içerir ve saklar
+            //var claims = new List<Claim>
+            //{
+            //    new Claim(ClaimTypes.Name,"filla"),
+            //    new Claim(ClaimTypes.Role,"Admin"),
+            //    new Claim(ClaimTypes.Email,"aptik@gmail.com")
+            //};
+            //var identity = new ClaimsIdentity(claims, "Cookies");
+            //var principal = new ClaimsPrincipal(identity);
+
+            //await HttpContext.SignInAsync("cookies", principal);
+            //return RedirectToAction("Index", "Home");
+            //identity kutuphanesini kullanarak giriş yapma
+
 
             Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
 
@@ -104,7 +122,9 @@ namespace Fisilti.MVC.Controllers
 
         public async Task<IActionResult> LogOut()
         {
+
             await _signInManager.SignOutAsync();
+            //await HttpContext.SignOutAsync("Cookies");
             return RedirectToAction("Index", "Home");
         }
     }

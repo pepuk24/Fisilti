@@ -11,6 +11,14 @@ builder.Services.AddDbContext<FisiltiDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("FisiltiDB"));
 });
 
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", opt =>
+    {
+        opt.LoginPath = "/Accout/Login";
+        opt.LogoutPath = "/Account/LogOut";
+    });
+
+
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<AutoMapperProfile>();
@@ -19,25 +27,25 @@ builder.Services.AddAutoMapper(cfg =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services
-    .AddIdentity<AppUser, AppRole>(opt =>
-    {
-        //Þifre Kurallarý
-        opt.Password.RequireNonAlphanumeric = false;
-        //opt.Password.RequireUppercase = false;
+//builder.Services
+//    .AddIdentity<AppUser, AppRole>(opt =>
+//    {
+//        //Þifre Kurallarý
+//        opt.Password.RequireNonAlphanumeric = false;
+//        //opt.Password.RequireUppercase = false;
 
 
-        //E-Posta doðrulama zorunlu olsun
-        opt.SignIn.RequireConfirmedEmail = true;
+//        //E-Posta doðrulama zorunlu olsun
+//        opt.SignIn.RequireConfirmedEmail = true;
 
-        //Lockout Ayarlarý
-        opt.Lockout.MaxFailedAccessAttempts = 5; // Hatalý giriþ sayýsý
-        opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); //Kilit Süresi
-        opt.Lockout.AllowedForNewUsers = true;
+//        //Lockout Ayarlarý
+//        opt.Lockout.MaxFailedAccessAttempts = 5; // Hatalý giriþ sayýsý
+//        opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15); //Kilit Süresi
+//        opt.Lockout.AllowedForNewUsers = true;
 
-    })
-    .AddEntityFrameworkStores<FisiltiDbContext>()
-    .AddDefaultTokenProviders();
+//    })
+//    .AddEntityFrameworkStores<FisiltiDbContext>()
+//    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
